@@ -1,0 +1,56 @@
+&ld_single_par
+
+    rho0=           7.455e14
+    lam=            2.0
+    eos_file=       'eos_D12.txt'
+    epsmin_tov=     1.e-13
+    ell=            2.0
+    aniso_EOS=      'QL2'
+/
+
+&mode_search_ctrl
+    n=              100
+    f1=             1000
+    f2=             2500
+    display_Ain=    1
+
+    fg=             1500
+    fwidth=         5.e-2
+    save_mode=      'f'
+/
+
+!===============================================================================================
+! Example parameters
+!===============================================================================================
+&ld_single_par_sample
+
+    ! Central density of the star
+    rho0=           9.88e14
+    ! Strength of the anisotropy
+    lam=            0.0
+    ! EOS file name
+    eos_file=       'eos_SLy4_smooth.txt'
+    ! Cutoff pressure (relative to central pressure) of TOV solution
+    epsmin_tov=     1.e-13
+    ! Spherical harmonics order
+    ell=            2.0
+    ! Anisotropic EOS choice
+    aniso_EOS=      'QL2'
+/
+
+&mode_search_ctrl_guide
+    ! Number of points used to scan A_{in}
+    n=              50
+    ! Starting and ending frequency used to scan A_{in} (in Hz)
+    f1=             14365
+    f2=             14368.3
+    ! Use system call to run gnuplot to display A_in. 1. local; 2. global
+    display_Ain=    1
+
+    ! Central guess frequency and fractional width for using Mueller's method to locate A_{in} = 0 (in Hz)
+    fg=             14366.9
+    fwidth=         1.e-5
+
+    ! Mode name
+    save_mode=      'p_5'
+/
