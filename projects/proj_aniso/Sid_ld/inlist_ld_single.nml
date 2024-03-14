@@ -29,7 +29,7 @@
     ! Strength of the anisotropy
     lam=            0.0
     ! EOS file name
-    eos_file=       'eos_SLy4_smooth.txt'
+    eos_file=       'eos_SLy4.txt'
     ! Cutoff pressure (relative to central pressure) of TOV solution
     epsmin_tov=     1.e-13
     ! Spherical harmonics order
