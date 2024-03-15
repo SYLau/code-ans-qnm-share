@@ -26,7 +26,7 @@
 
     ! Central density of the star
     rho0=           9.88e14
-    ! Strength of the anisotropy
+    ! Strength of the anisotropy (\beta in the paper)
     lam=            0.0
     ! EOS file name
     eos_file=       'eos_SLy4.txt'
@@ -34,7 +34,7 @@
     epsmin_tov=     1.e-13
     ! Spherical harmonics order
     ell=            2.0
-    ! Anisotropic EOS choice
+    ! Anisotropic EOS choice (QL2: H-model; BL: BL-model)
     aniso_EOS=      'QL2'
 /
 
@@ -48,6 +48,7 @@
     display_Ain=    1
 
     ! Central guess frequency and fractional width for using Mueller's method to locate A_{in} = 0 (in Hz)
+    ! Width is the fractional width with respect to fg
     fg=             14366.9
     fwidth=         1.e-5
 
