@@ -7,4 +7,4 @@ This code has only been tested in Windows 10 OS with the gFortran compiler. It c
 3. To run the compiled program, cd to "projects\proj_aniso\Sid_ld" and execute "bin\proj_aniso_ld_single\proj_aniso_ld_single.exe"
 4. Modify "projects\proj_aniso\Sid_ld\inlist_ld_single.nml" to adjust the anisotropic neutron star parameters and search frequency for the modes
 
-It is recommended to have gnuplot installed to plot the results generated. Two gnuplot scripts are provided in "projects\proj_aniso\Sid_ld\results_single\" to plot the ingoing amplitude wave at far-field region at a given range of frequencies.
+It is recommended to have gnuplot installed to plot the results generated. Two gnuplot scripts are provided in "projects\proj_aniso\Sid_ld\results_single\" to plot the ingoing wave amplitude at the far-field region at a given range of frequencies.
