@@ -1,5 +1,5 @@
 # code-ans-qnm-share
-Fortran code for computing quasi-normal modes of anisotropic neutron stars
+Fortran code for computing quasi-normal modes of anisotropic neutron stars.
 This code has only been tested in Windows 10 OS with the gFortran compiler. It contains Fortran 2008 features and is incompatible with older versions of Fortran.
 
 1. Before compiling the main program, compile the odepack library by running "lib\odepack\install.sh". This creates the compiled library file "libodepack.a".
