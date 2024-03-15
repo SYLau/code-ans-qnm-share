@@ -1,7 +1,7 @@
 &ld_single_par
 
     rho0=           7.455e14
-    lam=            2.0
+    lam=            -10.0
     eos_file=       'eos_D12.txt'
     epsmin_tov=     1.e-13
     ell=            2.0
@@ -10,13 +10,13 @@
 
 &mode_search_ctrl
     n=              100
-    f1=             1000
-    f2=             2500
+    f1=             4150
+    f2=             4420
     display_Ain=    1
 
-    fg=             1500
-    fwidth=         5.e-2
-    save_mode=      'f'
+    fg=             4364
+    fwidth=         1.e-2
+    save_mode=      'p_1'
 /
 
 !===============================================================================================
