@@ -147,8 +147,8 @@ OBJS_DIR = ../obj/proj_aniso_ld_single/src/nr/
 EXE_DIR = ../bin/proj_aniso_ld_single/
 
 EXE = proj_aniso_ld_single.exe
-FC = gfortran.exe
-LD = gfortran.exe
+FC = gfortran
+LD = gfortran
 IDIR = 
 CFLAGS = -g -pedantic -Wextra -Wall -fbacktrace -fcheck=all -m64 -ffpe-trap=zero,overflow,underflow  -J$(OBJS_DIR) $(IDIR)
 LFLAGS = 
