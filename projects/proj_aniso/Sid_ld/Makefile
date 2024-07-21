@@ -152,7 +152,7 @@ LD = gfortran
 IDIR = 
 CFLAGS = -g -pedantic -Wextra -Wall -fbacktrace -fcheck=all -m64 -ffpe-trap=zero,overflow,underflow  -J$(OBJS_DIR) $(IDIR)
 LFLAGS = 
-LIBS = ..\..\..\lib\odepack\libodepack.a 
+LIBS = ../../../lib/odepack/libodepack.a 
 
 VPATH = $(SRC_DIR_f90d1):$(OBJS_DIR):$(SRC_DIR_f90d2):$(OBJS_DIR):$(SRC_DIR_f90d3):$(OBJS_DIR):$(SRC_DIR_f90d4):$(OBJS_DIR):$(SRC_DIR_f90d5):$(OBJS_DIR):$(SRC_DIR_nmld6):$(OBJS_DIR):$(SRC_DIR_f90d7):$(OBJS_DIR):$(SRC_DIR_f90d8):$(OBJS_DIR):$(SRC_DIR_f90d9):$(OBJS_DIR):$(SRC_DIR_f90d10):$(OBJS_DIR):$(SRC_DIR_f90d6):$(OBJS_DIR):$(SRC_DIR_shd8):$(OBJS_DIR)
 OBJS = $(addprefix $(OBJS_DIR), $(OBJS_f90d1) $(OBJS_f90d2) $(OBJS_f90d3) $(OBJS_f90d4) $(OBJS_f90d5) $(OBJS_nmld6) $(OBJS_f90d7) $(OBJS_f90d8) $(OBJS_f90d9) $(OBJS_f90d10) $(OBJS_f90d6) $(OBJS_shd8))
