@@ -146,7 +146,7 @@ SRC_DIR_shd8 = ../../../lib/odepack/
 OBJS_DIR = ../obj/proj_aniso_ld_single/src/nr/
 EXE_DIR = ../bin/proj_aniso_ld_single/
 
-EXE = proj_aniso_ld_single.exe
+EXE = out
 FC = gfortran
 LD = gfortran
 IDIR = 
