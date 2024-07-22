@@ -143,8 +143,8 @@ SRC_DIR_f90d10 = ../../../src/nr/usr_def/
 SRC_DIR_f90d6 = 
 
 SRC_DIR_shd8 = ../../../lib/odepack/
-OBJS_DIR = ../obj/proj_aniso_ld_single/src/nr/
-EXE_DIR = ../bin/proj_aniso_ld_single/
+OBJS_DIR = obj/proj_aniso_ld_single/src/nr/
+EXE_DIR = bin/proj_aniso_ld_single/
 
 EXE = out.exe
 FC = gfortran
