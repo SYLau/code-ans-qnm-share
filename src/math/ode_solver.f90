@@ -64,7 +64,8 @@ contains
     !=================================================================================================
     ! RK45 Adaptive using Cash Karp method. Modified from numerical recipes
     !=================================================================================================
-    subroutine rk45ad(fcn,t,x,h,tb,emax,saveData,atol,itmax,iflag,xScaleIn,hmin,dtSaveIn,iwarn,tcond,openbd)
+    subroutine rk45ad(fcn,t,x,h,tb,emax,saveData,atol,itmax,iflag,xScaleIn,hmin,dtSaveIn,iwarn &
+        ,tcond,openbd,tsign)
         ! Modify xScale for different ODEs
         ! n: no of equations; fcn: subroutine containing functions of dx/dt; t: independent variable; x: dependent variables
         ! h: initial guess of step size; itmax: maximum iteration step to increase step size
@@ -87,6 +88,7 @@ contains
         integer,optional,intent(in)::iwarn
         procedure(term_cond),optional:: tcond
         logical,optional::openbd
+        integer,optional,intent(in)::tsign
 !        real(wp) ::delta=0.5d-14
         logical::savedt
         real(wp),dimension(size(x))::at !absolute tolerance
@@ -100,10 +102,12 @@ contains
         real(wp)::d
         real(wp)::e
         real(wp)::tcond_old, t_old, t_end, t_acc
+        real(wp),dimension(size(x))::x_old
         integer :: n, k
         real(wp), parameter:: safety=0.9_wp, pGrow= -0.2_wp, pShrink= -0.25_wp, errcon=1.89e-4_wp, tiny= 1.e-30_wp !The value errcon equals (5/safety)**(1/pGrow), requires scale-up factor to be at most 5
         logical,save:: warn=.true.
         integer::a_iwarn
+        integer::term_sign
         logical::opbd
         integer::dataSize
         real(wp):: tsas
@@ -118,7 +122,7 @@ contains
 
         if (present(tcond)) t_old = t !save the previous t, used only when determining tcond = 0
         if (present(tcond)) tcond_old = tcond(t,x)*1.1 !save the previous tcond, used only when determining tcond = 0
-        if (present(tcond)) t_acc = 1.e-8_wp !the Secant method accuracy when solving for tcond = 0
+        if (present(tcond)) t_acc = 1.e-8_wp !the root-finding method accuracy when solving for tcond = 0
 
         opbd = .false.
         if (present(openbd)) opbd = openbd ! open boundary
@@ -128,6 +132,9 @@ contains
 
         a_iwarn = 1
         if (present(iwarn)) a_iwarn = iwarn
+
+        term_sign = 0
+        if (present(tsign)) term_sign = tsign
 
         n = size(x)
         ind = 1 ! ind 0  :-> integration finished
@@ -153,15 +160,19 @@ contains
         if (savedt) call save_a_step
 
         do
+
             k = k + 1
             if (k > itlimit) exit ! Terminate with error
 
             if (present(tcond)) then
                 if (tcond(t,x)*tcond_old<0) then
-                    t_end = rtsec(terminate_cond,t_old,t,t_acc)
+!                    t_end = rtsec(terminate_cond,t_old,t,t_acc)
+                    t_end = rtbis(terminate_cond,t_old,t,t_acc,term_sign)
 
                     if (abs(t_end -t_old)<= abs(tb -t_old) .or. opbd) then
                         ind = 0 !signals integration finished
+                        t = t_old
+                        x = x_old
                         call rkck(fcn,t,x,t_end-t_old,yerr) !integrate a single step using Runge-Kutta-Cash-Karp method
 
                         if (savedt) call save_a_step
@@ -187,6 +198,8 @@ contains
             xsave = x
             tsave = t
             t_old = t
+            x_old = x
+            if (present(tcond)) tcond_old = tcond(t,x)
 
             if (.not.present(xScaleIn)) then
                 call fcn(t, x, f)
@@ -277,11 +290,11 @@ contains
             real(wp) :: y
             real(wp)::step
             real(wp)::tstart
-            real(wp), dimension(size(x)) :: xt, yerr
+            real(wp), dimension(size(x)) ::xt, yerr
 
             tstart = t_old
             step = tin - tstart
-            xt = x
+            xt = x_old
             call rkck(fcn,tstart,xt,step,yerr) !integrate a single step using Runge-Kutta-Cash-Karp method
 
             y = tcond(tin,xt)
@@ -563,14 +576,68 @@ contains
         reallocate_rm_a(1:min(nold,n),1:min(mold,m))=p(1:min(nold,n),1:min(mold,m))
         deallocate(p)
     endfunction reallocate_rm_a
+    !------------------------------------------------------------------------------
+    ! Local Utility
+    !------------------------------------------------------------------------------
+    ! Modified from numerical recipes
+    function rtbis(func,x1,x2,xacc,term_sign)
+        implicit none
+        real(wp), intent(in) :: x1,x2,xacc
+        integer,intent(in)::term_sign
+        real(wp) :: rtbis
+        interface
+            function func(x)
+                import wp
+                implicit none
+                real(wp), intent(in) :: x
+                real(wp) :: func
+            end function func
+        end interface
+        integer, parameter :: MAXIT=150
+        integer :: j
+        real(wp) :: dx,f,fmid,xmid
+        fmid=func(x2)
+        f=func(x1)
 
-    !    secant method from numerical recipes
+        if (f*fmid >= 0.0) stop 'rtbis: root must be bracketed'
+        if (f < 0.0) then
+            rtbis=x1
+            dx=x2-x1
+        else
+            rtbis=x2
+            dx=x1-x2
+        end if
+        do j=1,MAXIT
+            dx=dx*0.5_dp
+            xmid=rtbis+dx
+            fmid=func(xmid)
+            if (fmid <= 0.0) rtbis=xmid
+!            if (abs(dx) < xacc .or. fmid == 0.0) return
+            if (abs(dx) < xacc .or. fmid == 0.0) then
+                if (term_sign == 0) then
+                    return
+                else
+                    if (fmid*sign(1,term_sign)>=0.) then
+                        rtbis = xmid
+                        return
+                    else
+                        rtbis = xmid+dx
+                        return
+                    endif
+                endif
+            endif
+        end do
+        stop 'ode_solver: rtbis: too many bisections'
+    end function rtbis
+
+    !  Modified from secant method from numerical recipes
     function rtsec(func,x1,x2,xacc)
         real(wp), intent(in) :: x1,x2,xacc
         real(wp) :: rtsec
         integer, parameter :: MAXIT=30
         integer :: j
         real(wp) :: dx,f,fl,xl
+        real(wp)::fsave,xsave
         interface
             function func(x)
                 import wp
@@ -590,6 +657,8 @@ contains
         end if
         do j=1,MAXIT
             dx=(xl-rtsec)*f/(f-fl)
+            xsave = xl
+            fsave = fl
             xl=rtsec
             fl=f
             rtsec=rtsec+dx
