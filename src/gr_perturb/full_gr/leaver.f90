@@ -80,10 +80,10 @@ module leaver_mod
 
             if (n<=0) error stop 'err: leaver_solve beta n <= 0'
             if (n == 1) then
-                res = -2*(im*wc*r+(1+3*m/r))
+                res = -2*(im*wc*r+(1-3*m/r))
             else
                 delta = 2*m/r*(n-3)*(n+1)
-                res = -2*(im*wc*r+(1+3*m/r)*n)*n-alpha(n-1)*delta/ga(n-1)
+                res = -2*(im*wc*r+(1-3*m/r)*n)*n-alpha(n-1)*delta/ga(n-1)
             endif
         end function beta
 
