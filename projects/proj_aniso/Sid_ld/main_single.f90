@@ -16,9 +16,10 @@ program Sid_LD
     integer::display_Ain
 
     real(wp)::fg,fwidth
+    real(wp)::fi
     character(len=:),allocatable::save_mode
 
-    namelist /mode_search_ctrl/ n,f1,f2,display_Ain,fg,fwidth,save_mode
+    namelist /mode_search_ctrl/ n,f1,f2,display_Ain,fg,fwidth,save_mode,fi
     real(wp),allocatable,dimension(:)::out_f,out_A
     character(len=:),allocatable::option
 
@@ -220,7 +221,7 @@ program Sid_LD
                 if (option == '1') then
                     call print_time(msg='scanning A_{in}')
 
-                    call scan_Ain_r(ell,f1,f2,n,plt_f,plt_y) !Calculate amplitude of ingoing wave as function of Re(f) (Hz) to estimate the position of the mode
+                    call scan_Ain_r(ell,f1,f2,n,plt_f,plt_y, fi=fi) !Calculate amplitude of ingoing wave as function of Re(f) (Hz) to estimate the position of the mode
 
                     !============================================================================================================
                     output_Ain: block
@@ -278,7 +279,7 @@ program Sid_LD
 
 
                     call print_time(msg='solving for eigenmode')
-                    fguess=cmplx(fg,0._wp,kind=wp)
+                    fguess=cmplx(fg,fi,kind=wp)
                     fguess1=fguess*(1+fwidth)
                     fguess2=fguess*(1-fwidth)
                     print*, 'fguess = ', fg
