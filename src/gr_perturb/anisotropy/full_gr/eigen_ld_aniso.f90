@@ -18,8 +18,11 @@ module eigen_ld_aniso_mod
         complex(8),allocatable,dimension(:)::Ze, dZe
     end type
 
+    integer :: muller_max_steps = 100
+    logical :: print_muller = .false.
+
     contains
-    subroutine scan_Ain_r(l,f1,f2,step,ei_fc,ei_Ain,focus_n,focus_f,focus_range) !Scan the ingoing wave amplitude gamma as a function of frequency (Hz)
+    subroutine scan_Ain_r(l,f1,f2,step,ei_fc,ei_Ain,focus_n,focus_f,focus_range,fi) !Scan the ingoing wave amplitude gamma as a function of frequency (Hz)
         use type_mod,only:pi2
         use puls_ld_aniso_mod,only:integrate_ld
         use io_mod,only:reallocate_a
@@ -27,13 +30,18 @@ module eigen_ld_aniso_mod
         real(8),intent(in)::l,f1,f2
         real(8),intent(in),optional::focus_f(:), focus_range(:)
         integer,intent(in),optional::focus_n
+        real(8),intent(in),optional::fi
         integer,intent(in)::step
         complex(8),allocatable,intent(out)::ei_fc(:),ei_Ain(:) !output a list of frequency and ingoing wave amplitude
         real(8)::ei_f(step)
         real(8)::df, f_low, f_up
+        real(8)::fimag
         integer::i, j,n,posi,fstep,rstep
 
         allocate(ei_fc(step),ei_Ain(step))
+
+        fimag = 0.d0
+        if (present(fi)) fimag = fi
 
         rstep=step
         posi=0
@@ -62,7 +70,7 @@ module eigen_ld_aniso_mod
             forall (i=1:rstep) ei_f(i+posi)=f1+df*i
         endif
         call sort(ei_f)
-        ei_fc=cmplx(ei_f,0.d0,kind=8)
+        ei_fc=cmplx(ei_f,fimag,kind=8)
         do i=1,step
             !ei_fc(i+posi)=cmplx(f1+df*i,0.d0,kind=8)
             call integrate_ld(l,pi2*ei_fc(i),.false.,ei_Ain(i))
@@ -179,7 +187,7 @@ module eigen_ld_aniso_mod
         type(pul_sol),intent(out)::puls_save
         complex(8)::dump
         real(8)::eps=1.d-11
-            fc_save=rtmuller(ei_cond, x1, x2, x3, eps, quit_if_error,ostat,maxit=30) !use Muller's method to locate the mode frequency
+            fc_save=rtmuller(ei_cond, x1, x2, x3, eps, quit_if_error,ostat,maxit=muller_max_steps) !use Muller's method to locate the mode frequency
             if (present(ostat)) then
                 if (ostat/=0) return
             end if
@@ -202,7 +210,7 @@ module eigen_ld_aniso_mod
             w=pi2*x
             call integrate_ld(l,w,.false.,yout)
             ei_cond=yout
-!            print*,w/pi2,abs(yout)
+            if (print_muller) print*,w/pi2,abs(yout)
         end function ei_cond
     end subroutine get_eigenmodes_ld
 
