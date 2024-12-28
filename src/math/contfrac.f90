@@ -27,7 +27,8 @@ module contfrc_mod
     !=============================================================================================
     type mod_lentz
 
-        real(wp)::eps = 1.e-15_wp
+!        real(wp)::eps = 1.e-15_wp
+        real(wp)::eps = 1.e-6_wp
         real(wp)::tiny = 1.e-30_wp
 
         integer::itmax = 100
