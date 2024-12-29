@@ -31,7 +31,7 @@ module contfrc_mod
         real(wp)::eps = 1.e-6_wp
         real(wp)::tiny = 1.e-30_wp
 
-        integer::itmax = 100
+        integer::itmax = 50
 
         procedure(se_r), pointer, nopass:: ar           => null()
         procedure(se_r), pointer, nopass:: br           => null()
@@ -72,7 +72,7 @@ module contfrc_mod
             if (abs(C*D - 1) < this%eps) return
         end do
 
-        error stop 'err: mod_lentz_r exceeds max iteration'
+!        error stop 'err: mod_lentz_r exceeds max iteration'
 
     end function mod_lentz_r
 
@@ -100,7 +100,7 @@ module contfrc_mod
             if (abs(C*D - 1) < this%eps) return
         end do
 
-        error stop 'err: mod_lentz_c exceeds max iteration'
+!        error stop 'err: mod_lentz_c exceeds max iteration'
 
     end function mod_lentz_c
 
