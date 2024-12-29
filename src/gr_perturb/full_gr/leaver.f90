@@ -41,6 +41,8 @@ module leaver_mod
 
         beta0=r/Q(1)*(Q(2)+im*wc*r/(r-2*m)*Q(1))
 
+        cf%itmax = 15
+
         cf%ac => ac
         cf%bc => bc
         soln = beta0 + cf%c()
