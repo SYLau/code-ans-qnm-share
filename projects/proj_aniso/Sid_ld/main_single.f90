@@ -231,8 +231,8 @@ program Sid_LD
                         integer::uni
                         integer::i
 
-                        call writeArray('results_single/ingoing_amp.txt',[character(len=12)::'f (Hz)', 'A_in'])
-                        call writeArray('results_single/ingoing_amp.txt',real(plt_f),abs(plt_y),st='old',po='append')
+                        call writeArray('results_single/ingoing_amp.txt',[character(len=12)::'f (Hz)', 'f_i (Hz)', 'A_in'])
+                        call writeArray('results_single/ingoing_amp.txt',real(plt_f),imag(plt_f),abs(plt_y),st='old',po='append')
 
                         !===========================================================================================================
                         plot_results:block
