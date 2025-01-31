@@ -11,4 +11,4 @@ set ylabel "|𝐴_{in}|" font "Cambria,14"
 set logscale y
 
 plot \
-"ingoing_amp.txt" using 2:3 notitle w l lc 8
+"ingoing_amp_full.txt" using 2:3 notitle w l lc 8
