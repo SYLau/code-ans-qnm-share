@@ -4,6 +4,7 @@ module eigen_ld_aniso_mod
     private
     public::pul_sol
     public::scan_Ain_r
+    public::scan_Ain_c
     public::get_fmode
     public::brac_eigenmodes_ld
     public::get_eigenmodes_ld
@@ -73,6 +74,26 @@ module eigen_ld_aniso_mod
         ei_fc=cmplx(ei_f,fimag,kind=8)
         do i=1,step
             !ei_fc(i+posi)=cmplx(f1+df*i,0.d0,kind=8)
+            call integrate_ld(l,pi2*ei_fc(i),.false.,ei_Ain(i))
+        end do
+    end subroutine
+
+    subroutine scan_Ain_c(l,fx1,fx2,fy1,fy2,step,ei_fc,ei_Ain) !Scan the ingoing wave amplitude gamma as a function of frequency (Hz)
+        use type_mod,only:pi2
+        use puls_ld_aniso_mod,only:integrate_ld
+        real(8),intent(in)::l,fx1,fx2,fy1,fy2
+        integer,intent(in)::step
+        complex(8),allocatable,intent(out)::ei_fc(:),ei_Ain(:) !output a list of frequency and ingoing wave amplitude
+        real(8)::dfx,dfy,fr,fi
+        integer::i
+
+        allocate(ei_fc(step),ei_Ain(step))
+        dfx = (fx2-fx1)/step
+        dfy = (fy2-fy1)/step
+        do i = 1,step
+            fr = fx1+i*dfx
+            fi = fy1+i*dfy
+            ei_fc(i) = cmplx(fr,fi,kind=8)
             call integrate_ld(l,pi2*ei_fc(i),.false.,ei_Ain(i))
         end do
     end subroutine
