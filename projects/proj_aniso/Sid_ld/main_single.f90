@@ -20,7 +20,7 @@ program Sid_LD
     character(len=:),allocatable::save_mode
 
     namelist /mode_search_ctrl/ n,f1,f2,display_Ain,fg,fwidth,save_mode,fi1,fi2,fgi
-    real(wp),allocatable,dimension(:)::out_f,out_A
+    real(wp),allocatable,dimension(:)::out_f,out_fi,out_A
     character(len=:),allocatable::option
 
     !======================================================================================================================================
@@ -31,7 +31,7 @@ program Sid_LD
     !======================================================================================================================================
     ! Initialize global arrays
     !======================================================================================================================================
-    allocate(out_f(0),out_A(0))
+    allocate(out_f(0),out_fi(0),out_A(0))
 
     !======================================================================================================================================
     initialize_output_file: block
@@ -259,6 +259,7 @@ program Sid_LD
                         end block plot_results
 
                         out_f = append_a(out_f,real(plt_f))
+                        out_fi = append_a(out_fi,imag(plt_f))
                         out_A = append_a(out_A,abs(plt_y))
 
                         call sort(out_f, out_A)
@@ -266,7 +267,7 @@ program Sid_LD
                         open(newunit=uni, file = 'results_single/ingoing_amp_full.txt', status='replace', action = 'write')
                         write(uni, '(2a16)') 'f (Hz)', 'A_in'
                         do i=1,size(out_f)
-                            write(uni, '(2es16.8)') out_f(i), out_A(i)
+                            write(uni, '(2es16.8)') out_f(i), out_fi(i), out_A(i)
                         end do
                         close(uni)
                     end block output_Ain
