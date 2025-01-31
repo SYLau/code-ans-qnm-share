@@ -265,9 +265,9 @@ program Sid_LD
                         call sort(out_f, out_A)
 
                         open(newunit=uni, file = 'results_single/ingoing_amp_full.txt', status='replace', action = 'write')
-                        write(uni, '(2a16)') 'f (Hz)', 'A_in'
+                        write(uni, '(3a16)') 'f (Hz)', 'f_i (Hz)', 'A_in'
                         do i=1,size(out_f)
-                            write(uni, '(2es16.8)') out_f(i), out_fi(i), out_A(i)
+                            write(uni, '(3es16.8)') out_f(i), out_fi(i), out_A(i)
                         end do
                         close(uni)
                     end block output_Ain
